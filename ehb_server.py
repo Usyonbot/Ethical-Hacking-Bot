@@ -104,8 +104,10 @@ _LOCAL_PATHS = [
     os.path.join(_BASE, "ehb-env", "bin"),
     os.path.join(_BASE, "go", "bin"),
     os.path.join(_BASE, "gems", "bin"),
+    os.path.join(_BASE, "tools"),
     os.path.join(_BASE, "tools", "exploitdb"),
     "/opt/homebrew/bin",
+    "/opt/homebrew/Cellar/samba/4.24.1/bin",
     "/usr/local/bin",
 ]
 os.environ["PATH"] = ":".join(_LOCAL_PATHS) + ":" + os.environ.get("PATH", "")
@@ -9160,11 +9162,12 @@ def health_data():
         "msfvenom", "msfconsole", "graphql-scanner", "jwt-analyzer"
     ]
 
-    all_tools = (
+    _all_tools_raw = (
         essential_tools + network_tools + web_security_tools + vuln_scanning_tools +
         password_tools + binary_tools + forensics_tools + cloud_tools +
         osint_tools + exploitation_tools + api_tools + wireless_tools + additional_tools
     )
+    all_tools = list(dict.fromkeys(_all_tools_raw))
     tools_status = {}
 
     for tool in all_tools:
