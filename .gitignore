@@ -1,0 +1,6 @@
+gems/
+go/
+hexstrike-env/
+*.log
+__pycache__/
+*.pyc

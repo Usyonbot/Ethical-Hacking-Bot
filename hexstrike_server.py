@@ -98,6 +98,18 @@ app.config['JSON_SORT_KEYS'] = False
 API_PORT = int(os.environ.get('HEXSTRIKE_PORT', 8888))
 API_HOST = os.environ.get('HEXSTRIKE_HOST', '127.0.0.1')
 
+# Inject local tool paths so the server finds all tools installed in this folder
+_BASE = os.path.dirname(os.path.abspath(__file__))
+_LOCAL_PATHS = [
+    os.path.join(_BASE, "hexstrike-env", "bin"),
+    os.path.join(_BASE, "go", "bin"),
+    os.path.join(_BASE, "gems", "bin"),
+    os.path.join(_BASE, "tools", "exploitdb"),
+    "/opt/homebrew/bin",
+    "/usr/local/bin",
+]
+os.environ["PATH"] = ":".join(_LOCAL_PATHS) + ":" + os.environ.get("PATH", "")
+
 # ============================================================================
 # MODERN VISUAL ENGINE (v2.0 ENHANCEMENT)
 # ============================================================================
@@ -9020,9 +9032,69 @@ file_manager = FileOperationsManager()
 
 # API Routes
 
-@app.route("/health", methods=["GET"])
-def health_check():
-    """Health check endpoint with comprehensive tool detection"""
+@app.route("/", methods=["GET"])
+def dashboard():
+    health = health_data()
+    tools_available = health.get("total_tools_available", 0)
+    tools_total = health.get("total_tools_count", 0)
+    status = health.get("status", "unknown")
+    uptime = round(health.get("uptime", 0))
+    tools_status = health.get("tools_status", {})
+    available_list = [t for t, v in tools_status.items() if v]
+    missing_list = [t for t, v in tools_status.items() if not v]
+
+    rows_available = "".join(f"<tr><td>✅</td><td>{t}</td></tr>" for t in available_list)
+    rows_missing = "".join(f"<tr><td>❌</td><td>{t}</td></tr>" for t in missing_list[:30])
+
+    html = f"""<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="refresh" content="10"/>
+  <title>Ethical Hacking Bot — Dashboard</title>
+  <style>
+    *{{margin:0;padding:0;box-sizing:border-box}}
+    body{{background:#0a0a0f;color:#e0e0e0;font-family:monospace;padding:32px}}
+    h1{{color:#e63950;font-size:28px;margin-bottom:4px}}
+    .sub{{color:#555;font-size:13px;margin-bottom:32px}}
+    .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}}
+    .card{{background:#111;border:1px solid #222;border-radius:10px;padding:20px}}
+    .card .val{{font-size:32px;font-weight:bold;color:#e63950}}
+    .card .lbl{{font-size:12px;color:#666;margin-top:4px}}
+    .status-ok{{color:#4ade80}}.status-warn{{color:#facc15}}
+    table{{width:100%;border-collapse:collapse;font-size:13px}}
+    th{{text-align:left;color:#555;padding:6px 10px;border-bottom:1px solid #222}}
+    td{{padding:5px 10px;border-bottom:1px solid #111}}
+    .cols{{display:grid;grid-template-columns:1fr 1fr;gap:24px}}
+    h3{{color:#aaa;margin-bottom:12px;font-size:14px}}
+    a{{color:#e63950;text-decoration:none}}
+  </style>
+</head>
+<body>
+  <h1>⚔ Ethical Hacking Bot</h1>
+  <div class="sub">Dashboard — auto-refresh 10s &nbsp;|&nbsp; <a href="/health">/health</a> &nbsp;|&nbsp; <a href="/api/telemetry">/telemetry</a></div>
+  <div class="grid">
+    <div class="card"><div class="val {'status-ok' if status=='healthy' else 'status-warn'}">{status.upper()}</div><div class="lbl">Statut serveur</div></div>
+    <div class="card"><div class="val">{tools_available}</div><div class="lbl">Outils disponibles</div></div>
+    <div class="card"><div class="val">{tools_total}</div><div class="lbl">Outils total</div></div>
+    <div class="card"><div class="val">{uptime}s</div><div class="lbl">Uptime</div></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>✅ Outils actifs ({len(available_list)})</h3>
+      <table><tr><th></th><th>Outil</th></tr>{rows_available}</table>
+    </div>
+    <div>
+      <h3>❌ Outils manquants (top 30 / {len(missing_list)})</h3>
+      <table><tr><th></th><th>Outil</th></tr>{rows_missing}</table>
+    </div>
+  </div>
+</body>
+</html>"""
+    return html
+
+def health_data():
+    """Return health data as a plain dict (shared by dashboard and health endpoint)"""
 
     essential_tools = [
         "nmap", "gobuster", "dirb", "nikto", "sqlmap", "hydra", "john", "hashcat"
@@ -9120,7 +9192,7 @@ def health_check():
         "additional": {"total": len(additional_tools), "available": sum(1 for tool in additional_tools if tools_status.get(tool, False))}
     }
 
-    return jsonify({
+    return {
         "status": "healthy",
         "message": "HexStrike AI Tools API Server is operational",
         "version": "6.0.0",
@@ -9132,7 +9204,12 @@ def health_check():
         "cache_stats": cache.get_stats(),
         "telemetry": telemetry.get_stats(),
         "uptime": time.time() - telemetry.stats["start_time"]
-    })
+    }
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    """Health check endpoint with comprehensive tool detection"""
+    return jsonify(health_data())
 
 @app.route("/api/command", methods=["POST"])
 def generic_command():
@@ -17286,4 +17363,4 @@ if __name__ == "__main__":
         if line.strip():
             logger.info(line)
 
-    app.run(host="0.0.0.0", port=API_PORT, debug=DEBUG_MODE)
+    app.run(host="127.0.0.1", port=API_PORT, debug=DEBUG_MODE)
