@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] pwninit: ARM64 macOS not supported - use inside Linux container for CTF pwn setup"

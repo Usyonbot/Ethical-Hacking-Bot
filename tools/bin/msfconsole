@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] msfconsole: install Metasploit Framework from metasploit.com"

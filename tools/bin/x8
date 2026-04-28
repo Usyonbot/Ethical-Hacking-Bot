@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[EHB] x8: no macOS binary available - use feroxbuster or ffuf for parameter discovery"
+feroxbuster "$@" 2>/dev/null || ffuf "$@"

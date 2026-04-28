@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[EHB] steghide not natively available on macOS - use zsteg or stegsolve"
+zsteg "$@" 2>/dev/null || echo "Try: zsteg <file>"

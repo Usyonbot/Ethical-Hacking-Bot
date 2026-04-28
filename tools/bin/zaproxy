@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] zaproxy requires manual GUI installation - not available via CLI"

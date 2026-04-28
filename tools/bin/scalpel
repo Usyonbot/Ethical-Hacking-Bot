@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[EHB] scalpel not available on macOS - using foremost as alternative"
+foremost "$@"

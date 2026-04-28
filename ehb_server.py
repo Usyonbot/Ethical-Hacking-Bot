@@ -101,6 +101,7 @@ API_HOST = os.environ.get('EHB_HOST', '127.0.0.1')
 # Inject local tool paths so the server finds all tools installed in this folder
 _BASE = os.path.dirname(os.path.abspath(__file__))
 _LOCAL_PATHS = [
+    os.path.join(_BASE, "tools", "bin"),
     os.path.join(_BASE, "ehb-env", "bin"),
     os.path.join(_BASE, "go", "bin"),
     os.path.join(_BASE, "gems", "bin"),

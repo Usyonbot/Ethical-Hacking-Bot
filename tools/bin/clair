@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] clair: requires Linux environment or Docker"

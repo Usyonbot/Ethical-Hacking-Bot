@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] autopsy requires manual GUI installation - not available via CLI"

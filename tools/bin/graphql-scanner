@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+import sys
+sys.path.insert(0, '/Users/maxime/Desktop/Repo Github AI Agent/Ethical Hacking Bot/ehb-env/lib/python3.11/site-packages')
+print("GraphQL scanner ready - use via EHB API")

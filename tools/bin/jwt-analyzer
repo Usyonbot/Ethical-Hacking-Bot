@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+import sys, json, base64
+sys.path.insert(0, '/Users/maxime/Desktop/Repo Github AI Agent/Ethical Hacking Bot/ehb-env/lib/python3.11/site-packages')
+# JWT decode helper
+if len(sys.argv) > 1:
+    token = sys.argv[1]
+    parts = token.split('.')
+    if len(parts) >= 2:
+        for part in parts[:2]:
+            pad = 4 - len(part) % 4
+            try:
+                print(json.loads(base64.urlsafe_b64decode(part + '=' * pad)))
+            except: pass

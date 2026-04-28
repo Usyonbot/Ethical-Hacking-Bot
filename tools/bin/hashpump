@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+import sys
+sys.path.insert(0, '/Users/maxime/Desktop/Repo Github AI Agent/Ethical Hacking Bot/ehb-env/lib/python3.11/site-packages')
+import hashpumpy
+if len(sys.argv) >= 5:
+    sig, data, add, kl = sys.argv[1], sys.argv[2], sys.argv[3], int(sys.argv[4])
+    new_sig, new_data = hashpumpy.hashpump(sig, data, add, kl)
+    print(new_sig, new_data)
+else:
+    print("Usage: hashpump <sig> <data> <add> <key_length>")

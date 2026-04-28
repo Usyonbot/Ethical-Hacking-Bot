@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] insomnia requires manual GUI installation - not available via CLI"

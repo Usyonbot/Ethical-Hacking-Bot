@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[EHB] airmon-ng: monitor mode requires mac80211-based drivers (limited on macOS)"
+aircrack-ng --version 2>/dev/null | head -1

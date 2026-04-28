@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "[EHB] msfvenom: install Metasploit Framework from metasploit.com"
