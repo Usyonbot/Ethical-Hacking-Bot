@@ -1,0 +1,8 @@
+#!/bin/sh
+'''exec' "/Users/maxime/Desktop/Repo Github AI Agent/Ethical Hacking Bot/ehb-env/bin/python3.11" "$0" "$@"
+' '''
+import sys
+from ScoutSuite.__main__ import run_from_cli
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(run_from_cli())
