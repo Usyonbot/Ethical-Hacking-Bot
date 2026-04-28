@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "ehb": {
+      "command": "python3",
+      "args": [
+        "/path/ehb_mcp.py",
+        "--server",
+        "http://IPADDRESS:8888"
+      ],
+      "description": "EHB AI v6.0 - Advanced Cybersecurity Automation Platform. Turn off alwaysAllow if you dont want autonomous execution!",
+      "timeout": 300,
+      "alwaysAllow": []
+    }
+  }
+}

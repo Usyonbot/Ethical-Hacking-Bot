@@ -1,6 +1,6 @@
 gems/
 go/
-hexstrike-env/
+ehb-env/
 *.log
 __pycache__/
 *.pyc
